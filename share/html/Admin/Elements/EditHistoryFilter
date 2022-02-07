@@ -45,26 +45,35 @@
 %# those contributions and any derivatives thereof.
 %#
 %# END BPS TAGGED BLOCK }}}
-<%ARGS>
-$id
-</%ARGS>
-<%INIT>
-my $TicketObj = RT::Ticket->new($session{'CurrentUser'});
-$TicketObj->Load($id);
+<input type='hidden' name='HistoryFilter-Magic' value=1>
 
-my $attachments = $TicketObj->Attachments;
-my $attachment_content = $TicketObj->TextAttachments;
-my %extra_args;
-$m->callback( CallbackName => 'ExtraShowHistoryArguments', Ticket => $TicketObj, ExtraArgs => \%extra_args );
+<div class="form-row">
+  <div class="label col-3">
+    <&|/l&>History Filter</&>:
+  </div>
+  <div class="value col-9">
+    <select name="HistoryFilter" class="selectpicker form-control" multiple>
+%     foreach my $type ( @options ) {
+%         my $selected = '';
+%         if ( scalar @{$default} && grep {$_ eq $type} @{$default} ) {
+%             $selected = 'selected="selected"';
+%         }
+
+          <option <% $selected |n %> value="<% $type %>"><% loc( $type ) %></option>
+%     }
+    </select>
+  </div>
+</div>
+
+<%INIT>
+return unless $QueueObj;
+
+my $queue_attribute = $QueueObj->FirstAttribute( 'HistoryFilter' );
+my $default = $queue_attribute ? $queue_attribute->Content : [];
+
+my @options = RT->Config->Get( 'HistoryFilterTypes' );
 </%INIT>
-<& /Elements/ShowHistory,
-    Object => $TicketObj,
-    ShowHeaders => $ARGS{'ShowHeaders'},
-    ReverseTxns => $ARGS{'ReverseTxns'},
-    Attachments => $attachments,
-    AttachmentContent => $attachment_content,
-    HistoryFilter => $ARGS{'HistoryFilter'},
-    %extra_args,
-    &>
-<script type="text/javascript">ReplaceUserReferences()</script>
-% $m->abort();
+
+<%ARGS>
+$QueueObj => undef
+</%ARGS>
