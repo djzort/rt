@@ -429,7 +429,7 @@ CREATE TABLE Tickets (
 
 );
 
-CREATE INDEX Tickets1 ON Tickets (Queue, Status) ;
+CREATE INDEX Tickets1 ON Tickets (Queue, LOWER(Status));
 CREATE INDEX Tickets2 ON Tickets (Owner) ;
 CREATE INDEX Tickets3 ON Tickets (EffectiveId) ;
 
@@ -725,7 +725,7 @@ CREATE TABLE Assets (
 );
 
 CREATE INDEX AssetsName ON Assets (LOWER(Name));
-CREATE INDEX AssetsStatus ON Assets (Status);
+CREATE INDEX AssetsStatus ON Assets (LOWER(Status));
 CREATE INDEX AssetsCatalog ON Assets (Catalog);
 
 CREATE SEQUENCE catalogs_id_seq;

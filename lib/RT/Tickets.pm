@@ -1649,6 +1649,9 @@ sub Limit {
     $self->{_sql_looking_at}{ lc $args{FIELD} } = 1
         if $args{FIELD} and (not $args{ALIAS} or $args{ALIAS} eq "main");
 
+    $args{CASESENSITIVE} = 0
+        if $args{FIELD} and lc $args{FIELD} eq 'status' and (not $args{ALIAS} or $args{ALIAS} eq 'main');
+
     $self->SUPER::Limit(%args);
 }
 
@@ -1757,10 +1760,11 @@ sub LimitStatus {
         @_
     );
     $self->LimitField(
-        FIELD       => 'Status',
-        VALUE       => $args{'VALUE'},
-        OPERATOR    => $args{'OPERATOR'},
-        DESCRIPTION => join( ' ',
+        FIELD         => 'Status',
+        VALUE         => $args{'VALUE'},
+        OPERATOR      => $args{'OPERATOR'},
+        CASESENSITIVE => 0,
+        DESCRIPTION   => join( ' ',
             $self->loc('Status'), $args{'OPERATOR'},
             $self->loc( $args{'VALUE'} ) ),
     );

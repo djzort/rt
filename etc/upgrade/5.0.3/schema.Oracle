@@ -1,5 +1,3 @@
-DROP INDEX Users4;
-CREATE INDEX Users4 ON Users (LOWER(EmailAddress));
 DROP INDEX Tickets1;
 CREATE INDEX Tickets1 ON Tickets (Queue, LOWER(Status));
 DROP INDEX AssetsStatus;
