@@ -78,6 +78,18 @@
 %   }
 </div>
 </fieldset>
+% } elsif ( $RenderType eq 'Checkbox' ) {
+%   my $CFVs = CachedCustomFieldValues($CustomField);
+%   my $FalseValue = lc $CFVs->First->Name;
+%   my $TrueValue  = lc $CFVs->Next->Name;
+%   # a checkbox is considered unchecked only if it either:
+%   #     1) has no value
+%   #  OR 2) has the "false" value set (with or without any other values)
+%   #        Note that multiple values are only possible with data from prior to the
+%   #             conversion of the CF to the Checkbox RenderType
+%   my $isChecked = (scalar keys %default) && (not exists $default{$FalseValue});
+  <input type="checkbox" class="custom-control" <% $isChecked ? "checked" : "" %> onclick="document.getElementById('<% $name |n%>').value = this.checked ? '<% $TrueValue %>' : '<% $FalseValue %>'" />
+  <input type="hidden" id="<% $name %>" name="<% $name %>" class="custom-control" value="<% $isChecked ? $TrueValue : $FalseValue %>" />
 % } else {
 % if (@category) {
 %# this hidden select is to supply a full list of values,

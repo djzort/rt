@@ -87,6 +87,7 @@ our %FieldTypes = (
             single => [ 'Dropdown',                # loc
                         'Select box',              # loc
                         'List',                    # loc
+                        'Checkbox',                # loc
                       ]
         },
 
@@ -731,6 +732,10 @@ sub CanDeleteValue {
         return (0, $self->loc('Permission Denied'));
     }
 
+    if ($self->RenderType eq 'Checkbox' and $self->Values->Count < 3) {
+        return ( 0, $self->loc('A Checkbox must always have at least two values' ));
+    }
+
     return ( 1, '' );
 }
 
@@ -1362,6 +1367,15 @@ sub SetRenderType {
     if ( not grep { $_ eq $type } $self->RenderTypes ) {
         return (0, $self->loc("Invalid Render Type for custom field of type [_1]",
                                 $self->FriendlyType));
+    }
+
+    if ( $type eq 'Checkbox' ) {
+        if ( $self->Values->Count < 2 ) {
+            return (0, $self->loc("Must have at least two Values for Render Type Checkbox"));
+        }
+        elsif ( $self->BasedOn ) {
+            return (0, $self->loc("We can't currently render as a Checkbox when basing categories on another custom field.  Please use another render type."));
+        }
     }
 
     return $self->_Set( Field => 'RenderType', Value => $type, @_ );
@@ -2272,6 +2286,9 @@ sub SetBasedOn {
     # XXX: Remove this restriction once we support lists and cascaded selects
     if ( $self->RenderType =~ /List/ ) {
         return (0, $self->loc("We can't currently render as a List when basing categories on another custom field.  Please use another render type."));
+    }
+    elsif ( $self->RenderType eq 'Checkbox' ) {
+        return (0, $self->loc("We can't currently render as a Checkbox when basing categories on another custom field.  Please use another render type."));
     }
 
     return $self->_Set( Field => 'BasedOn', Value => $value, @_ )

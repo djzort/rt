@@ -52,7 +52,7 @@
 
 % # we need to allow for an extra col-2 if not combobox and categories are enabled
 % # if so, make the description cols -2 smaller to allow for categories
-% my $description_col_size = ( $CustomField->Type ne 'Combobox' && $Categories ? 4 : 6 );
+% my $description_col_size = ( ( $CustomField->Type ne 'Combobox' && $Categories ) || $renderType eq "Checkbox" ? 4 : 6 );
 
 <div class="form-row">
   <div class="label col-auto">
@@ -75,8 +75,14 @@
       <&|/l&>Category</&>
     </div>
 % }
+% elsif ( $renderType eq 'Checkbox' ) {
+    <div class="label categoryheader col-2 text-left">
+      <&|/l&>Checkbox Type</&>
+    </div>
+% }
 </div>
 
+% my $firstValue = 1;
 % while ( my $value = $values->Next ) {
 % my $paramtag = "CustomField-". $CustomField->Id ."-Value-". $value->Id;
 <div class="form-row">
@@ -105,6 +111,12 @@
     <option value="<% $Value->Name %>"<% $selected eq $Value->Name ? q[ selected="selected"] : "" |n%>><% $Value->Name %></option>
 %   }
     </select>
+  </div>
+% }
+% if ( $renderType eq 'Checkbox' ) {
+  <div class="col-2">
+        <% $firstValue ? loc('Unchecked') : loc('Checked') %>
+%   $firstValue = 0;
   </div>
 % }
   <div class="col-1">
@@ -139,6 +151,9 @@ my $Categories;
 if ($BasedOnObj and $BasedOnObj->Id) {
     $Categories = $BasedOnObj->Values;
 }
+
+my $renderType = $CustomField->RenderType;
+
 </%init>
 <%args>
 $CustomField => undef

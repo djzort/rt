@@ -3430,6 +3430,22 @@ sub _ProcessObjectCustomFieldUpdates {
                     Value => $value,
                 );
 
+                # this isn't a logical change, but having the field with an explicit
+                # "unchecked" value will make searching easier for users,
+                # so we do it silently
+                if (
+                    $cf_type eq 'Select' and
+                    $cf->RenderType eq 'Checkbox' and
+                    not defined $cf_values->First and
+                    lc $value eq lc CachedCustomFieldValues( $cf )->First->Name
+                ) {
+                    my ( $val, $msg ) = $args{'Object'}->AddCustomFieldValue(
+                        Field             => $cf,
+                        Value             => $value,
+                        RecordTransaction => 0,
+                    );
+                }
+
                 my ( $val, $msg ) = $args{'Object'}->AddCustomFieldValue(
                     Field => $cf,
                     Value => $value
