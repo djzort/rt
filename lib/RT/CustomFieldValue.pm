@@ -102,7 +102,11 @@ sub ValidateName {
 
 sub Delete {
     my $self = shift;
-    my ( $ret, $msg ) = $self->SUPER::Delete;
+    my ( $ret, $msg ) = $self->CustomFieldObj->CanDeleteValue( $self );
+    if ( !$ret ) {
+        return ( 0, $msg || $self->loc('Unable to delete custom field value.  Disallowed by custom field' ));
+    }
+    ( $ret, $msg ) = $self->SUPER::Delete;
     $self->CustomFieldObj->CleanupDefaultValues;
     return ( $ret, $msg );
 }

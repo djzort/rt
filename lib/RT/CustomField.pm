@@ -686,8 +686,6 @@ sub AddValue {
 }
 
 
-
-
 =head3 DeleteValue ID
 
 Deletes a value from this custom field by id.
@@ -718,6 +716,24 @@ sub DeleteValue {
     }
     return ($ok, $self->loc("Custom field value deleted"));
 }
+
+=head3 CanDeleteValue OBJECT
+
+Performs checks at the custom field level to make sure that the value can be deleted.
+
+=cut
+
+sub CanDeleteValue {
+    my $self = shift;
+    my $id_or_obj = shift;
+
+    unless ( $self->CurrentUserHasRight('AdminCustomField') || $self->CurrentUserHasRight('AdminCustomFieldValues') ) {
+        return (0, $self->loc('Permission Denied'));
+    }
+
+    return ( 1, '' );
+}
+
 
 =head2 ValidateValue Value
 
