@@ -2,7 +2,7 @@ use warnings;
 use strict;
 
 use RT;
-use RT::Test tests => 12;
+use RT::Test tests => 13;
 
 my $q = RT::Queue->new($RT::SystemUser);
 my ($id,$msg) =$q->Create(Name => "CF-Rights-".$$);
@@ -40,6 +40,9 @@ ok ($id,$msg);
 
 ($id,$msg) = $u->PrincipalObj->RevokeRight( Object => $cf, Right => 'AdminCustomFieldValues' );
 ok ($id,$msg);
+
+($id,$msg) = $cfv->Delete;
+ok (!$id,$msg);
 
 ($id,$msg) = $u->PrincipalObj->GrantRight( Object => $cf, Right => 'AdminCustomField' );
 ok ($id,$msg);
