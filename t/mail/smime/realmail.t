@@ -4,6 +4,8 @@ use warnings;
 use RT::Test::Crypt SMIME => 1, tests => undef;
 use Digest::MD5 qw(md5_hex);
 
+push @{ RT->Config->Get('SMIME')->{Providers} }, 'default', 'legacy';
+
 my $test = 'RT::Test::Crypt';
 my $mails = $test->smime_mail_set_path;
 

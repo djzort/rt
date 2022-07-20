@@ -3999,6 +3999,10 @@ Set C<Passphrase> to a scalar (to use for all keys), an anonymous
 function, or a hash (to look up by address).  If the hash is used, the
 '' key is used as a default.
 
+Set C<Providers> to a list of cryptographic providers to use.  If empty only
+the library default will be used.  If adding another provider, such as
+'legacy', the default will not be available unless also explicitly added.
+
 Set C<OtherCertificatesToSend> to path to a PEM-formatted certificate file.
 Certificates in the file will be include in outgoing signed emails.
 
@@ -4025,6 +4029,7 @@ Set( %SMIME,
     CAPath => undef,
     AcceptUntrustedCAs => undef,
     Passphrase => undef,
+    Providers => [],
     OtherCertificatesToSend => undef,
     CheckCRL => 0,
     CheckOCSP => 0,
