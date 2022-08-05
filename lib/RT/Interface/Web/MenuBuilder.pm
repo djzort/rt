@@ -279,8 +279,11 @@ sub BuildMainNav {
         _BuildAdminMenu( $request_path, $top, $widgets, $page, %args );
     }
 
-    my $username = '<span class="current-user">'
+    my $username = '<span class="current-user hidden">'
                  . $HTML::Mason::Commands::m->interp->apply_escapes($current_user->Name, 'h')
+                 . '</span>'
+                 . '<span class="current-user">'
+                 . $HTML::Mason::Commands::m->interp->apply_escapes($current_user->Format, 'h')
                  . '</span>';
     my $about_me = $top->child( 'preferences' =>
         title        => loc('Logged in as [_1]', $username),
@@ -1680,8 +1683,11 @@ sub BuildSelfServiceNav {
     $top->child( "assets", title => loc("Assets"), path => "/SelfService/Asset/" )
         if $current_user->HasRight( Right => 'ShowAssetsMenu', Object => RT->System );
 
-    my $username = '<span class="current-user">'
+    my $username = '<span class="current-user hidden">'
                  . $HTML::Mason::Commands::m->interp->apply_escapes($current_user->Name, 'h')
+                 . '</span>'
+                 . '<span class="current-user">'
+                 . $HTML::Mason::Commands::m->interp->apply_escapes($current_user->Format, 'h')
                  . '</span>';
     my $about_me = $top->child( preferences =>
         title        => loc('Logged in as [_1]', $username),
