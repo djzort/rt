@@ -92,7 +92,7 @@ diag "paren in the username";
     # $m->login chokes on ( in 4.0.5
     $m->get_ok($m->rt_base_url . "?user=j(doe;pass=password");
     $m->content_like(qr/Logout/i, 'contains logout link');
-    $m->content_contains('<span class="current-user">j&#40;doe</span>', 'contains logged in user name');
+    $m->content_contains('<span class="current-user hidden">j&#40;doe</span>', 'contains logged in user name');
 
     my $testuser = RT::User->new($RT::SystemUser);
     my ($ok,$msg) = $testuser->Load( 'j(doe' );
