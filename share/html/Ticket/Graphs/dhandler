@@ -74,8 +74,8 @@ $m->clear_buffer;
 
 my $png;
 use RT::Util 'safe_run_child';
-safe_run_child { $graph->as_png(\$png) };
-$m->out( $png );
+safe_run_child { $graph->run(format => 'png') };
+$m->out( $graph->dot_output );
 
 $m->abort;
 
